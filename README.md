@@ -1,9 +1,9 @@
 # WindowTrees README
 ## Intro
-WindowTrees is a Python RAxML wrapper. WindowTrees allows the generation and evaluation of a large number of window trees (trees built from only a certain window of the sequence) in short time. As input it uses consensus sequences in fasta format. These consensus sequences must have been created by mapping reads of different individuals or species to the same reference. All scaffolds or contigs that are included need to have the same name in every input file.
+WindowTrees is a Python RAxML wrapper. WindowTrees allows the generation and evaluation of a large number of sliding window trees (trees built from only a certain window of the sequence) in short time. As input it uses consensus sequences in fasta format. These consensus sequences must have been created by mapping reads of different individuals or species to the same reference. All scaffolds or contigs that are included need to have the same name in every input file.
 
 ## What does WindowTrees do?
-WindowTrees uses the consensus fasta files as input and creates windows of a previously specified size (-w). It is irrelevant whether short scaffolds or complete genomes are provided as input.
+WindowTrees uses the consensus fasta files as input and creates windows of a previously specified size (-w) by "sliding" the window along the sequence. It is irrelevant whether short scaffolds or complete genomes are provided as input.
 
 Afterwards the base content is determined. It is possible to specify a N-threshold to exclude windows with high numbers of missing data ("N"). Furthermore, WindowTrees determines the number of variable positions in the used windows.
 
@@ -13,7 +13,7 @@ In the final output WindowTrees provides folders that contain trees with the sam
 
 WindowTrees provides several optional arguments to be adaptable to the specific purpose of different analyses. Beside the already mentioned N-threshold those are the possibility to specify gaps or overlaps between the windows (-lw) and a binary mode in RAxML (BINGAMMA) to only use transversions (--binary). For the latter the fasta files must be non-binary. WindowTrees will do the transformation. This can be especially useful when working with ancient DNA data.
 
-The outout trees can be used for various analyses like ABBA BABA statistics/D stats other gene flow analyses. Examples for its usage are Hempel et al. (20xx), where the tool in its current form was first applied or Barlow et al. (2018). It also gives a good estimate on the possible topologies found in the sequences.
+The output trees can be used for various analyses like determining the direction of gene flow. Examples for its usage are Hempel et al. (2022), where the tool in its current form was first applied or Barlow et al. (2018), where the idea has first been applied. It also gives a good estimate on the possible topologies found in the sequences.
 
 ---
 
@@ -45,14 +45,14 @@ source activate windwotrees
 
 ## Analysis Workflow
 1. Provide several consensus sequences in fasta format that have been mapped to the same reference. The names of the scaffolds in the different consensus files must have the same name.
-2. Create a colon seperated list of short_name:/path/to/fasta. Each row of the file can contain information for one sample with the according path. (example input_test.tab)
+2. Create a colon seperated list of short_name:/path/to/fasta. Each row of the file can contain information for one sample with the according path. (see example input_test.tab)
 3. Start WindowTrees with appropriate parameters for your anaylsis. 
 
 Example WindowTrees call:
 ```sh
 python3 -u windowtrees.py -o testrun --outgroup outgroup-name -w 200000 inputfile_test.tab
 ```
-This will start the window tree analysis using WindowTrees. We define the window size with -w to be 200kB, the outgroup is defined by using the short_name from the input file. The generated output and the temporary files will be written into the folder testrun (-o)
+This will start the window tree analysis using WindowTrees. We define the window size with -w to be 200kB, the outgroup is defined by using the short_name from the input file. The generated output and the temporary files will be written into the folder testrun (-o).
 
 4. Inspect and further process the generated and topology sorted trees.
 
@@ -93,10 +93,10 @@ optional arguments:
 
 ## Output
 The program will generate the following output:
-- as many folders as trees were found by the program numbered consecutively (e.g. tree_1, tree_2...). These folders contain the trees that were found in newick format. The name of each tree contains the following: the number of that tree topology, a consecutive number of this tree, RaxML_bestTree, the scaffold number.fa, the number of variable sites and the position of the window (example: tree_1_1_RAxML_bestTree.Scaffold_5.fa_VS-137_37400001-37420000.nw".
+- as many folders as trees were found by the program numbered consecutively (e.g., tree_1, tree_2...). These folders contain the trees that were found in newick format. The name of each tree contains the following: the number of that tree topology, a consecutive number of this tree, RaxML_bestTree, the scaffold number.fa, the number of variable sites and the position of the window (example: tree_1_1_RAxML_bestTree.Scaffold_5.fa_VS-137_37400001-37420000.nw".
 - a folder called "trees" which contains the raxml outfile for each of the found trees for each window. The name consists of the scaffold name, number of variable sites and window position (example: Scaffold_1.fa_VS-70_60300001-60320000.fa_outfile.txt)
 - a file called "MSA_windowstats.out"
-  This file gives the path to the output directory, the applied window size and the allowed N threshold at the top. Next it provides the statistics for each winddow giving the scaffold name, the window position, the number of Ns, if the N threshold was passed (failed/passed), amount of A, T, G and C, if the N threshold was passed (True/False) and the number of variable sites in case the N threshold was passed. 
+  This file gives the path to the output directory, the applied window size and the allowed N threshold at the top. Next it provides the statistics for each window giving the scaffold name, the window position, the number of Ns, if the N threshold was passed (failed/passed), amount of A, T, G and C, if the N threshold was passed (True/False) and the number of variable sites in case the N threshold was passed. 
 - a file called "foundTrees.txt" gives a summary of the topologies found and the amount of each one.
  
 Here is an example output of MSA_windowstats.out
@@ -119,7 +119,7 @@ Indiv3;1722;Passed;5295;4987;3918;4078;
 Indiv4;21;Passed;5773;5485;4317;4404;
 
 ```
-Here is an example of foundTress.txt
+Here is an example output of foundTrees.txt
 ```
 tree_1	(((Indiv1,Indiv2),Indiv3),Indiv4);	4000
 tree_2	(((Indiv1,Indiv3),Indiv2),Indiv4);	7000
