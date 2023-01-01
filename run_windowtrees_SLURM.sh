@@ -43,7 +43,7 @@ echo "##########################################################################
 windowtree_py=/hpc-cloud/user/WindowTrees/windowtrees.py
 inputfile=/hpc-cloud/user/WindowTrees/inputfile_test.tab
 outpath=/hpc-cloud/user/WindowTrees/run1
-outgroup="BELUGA"
+outgroup="Outgroup"
 windowsize=1000000
 nthreshold=0.2
 ncpu=10
